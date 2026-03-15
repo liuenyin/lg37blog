@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap');
 @import "tailwindcss";
 @import "./typography.css";
 
@@ -6,29 +7,25 @@
 /* ── Light mode: white / soft-green / sky-blue / blush-pink ── */
 :root,
 html[data-theme="light"] {
-  --background: #fafbfc;        /* barely-off-white */
-  --foreground: #1e2129;        /* near-black for text */
-  --accent:     #0e9f6e;        /* emerald-green links */
-  --muted:      #e8f5f1;        /* very light mint for tags/chips */
-  --border:     #d1e8e0;        /* soft green-tinted border */
-  /* extra semantic tones used in prose/headings */
-  --accent-secondary: #3b82f6; /* sky-blue for secondary highlights */
-  --accent-warm:      #f472b6; /* blush-pink for decorative accents */
+  --background: #fafbfc;
+  --foreground: #1e2129;
+  --accent:     #0e9f6e;
+  --muted:      #e8f5f1;
+  --border:     #d1e8e0;
 }
 
 /* ── Dark mode: charcoal / slate / blue / orange / amber ── */
 html[data-theme="dark"] {
-  --background: #111318;        /* deep charcoal-black */
-  --foreground: #e4e8f0;        /* cool-white text */
-  --accent:     #f97316;        /* vivid orange for links & highlights */
-  --muted:      #1e2435;        /* dark slate-blue muted background */
-  --border:     #2a3655;        /* mid-slate border */
-  --accent-secondary: #60a5fa; /* sky-blue for secondary highlights */
-  --accent-warm:      #fbbf24; /* amber/yellow for decorative accents */
+  --background: #111318;
+  --foreground: #e4e8f0;
+  --accent:     #f97316;
+  --muted:      #1e2435;
+  --border:     #2a3655;
 }
 
 @theme inline {
-  --font-app: var(--font-google-sans-code);
+  --font-app: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
@@ -37,6 +34,7 @@ html[data-theme="dark"] {
 }
 
 @layer base {
+
   * {
     @apply border-border outline-accent/75;
     scrollbar-width: auto;
