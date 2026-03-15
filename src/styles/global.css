@@ -3,21 +3,28 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+/* ── Light mode: white / soft-green / sky-blue / blush-pink ── */
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --background: #fafbfc;        /* barely-off-white */
+  --foreground: #1e2129;        /* near-black for text */
+  --accent:     #0e9f6e;        /* emerald-green links */
+  --muted:      #e8f5f1;        /* very light mint for tags/chips */
+  --border:     #d1e8e0;        /* soft green-tinted border */
+  /* extra semantic tones used in prose/headings */
+  --accent-secondary: #3b82f6; /* sky-blue for secondary highlights */
+  --accent-warm:      #f472b6; /* blush-pink for decorative accents */
 }
 
+/* ── Dark mode: charcoal / slate / blue / orange / amber ── */
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60;
-  --border: #ab4b08;
+  --background: #111318;        /* deep charcoal-black */
+  --foreground: #e4e8f0;        /* cool-white text */
+  --accent:     #f97316;        /* vivid orange for links & highlights */
+  --muted:      #1e2435;        /* dark slate-blue muted background */
+  --border:     #2a3655;        /* mid-slate border */
+  --accent-secondary: #60a5fa; /* sky-blue for secondary highlights */
+  --accent-warm:      #fbbf24; /* amber/yellow for decorative accents */
 }
 
 @theme inline {
