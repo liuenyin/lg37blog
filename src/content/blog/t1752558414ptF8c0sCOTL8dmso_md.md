@@ -1,0 +1,330 @@
+---
+title: "t1752558414ptF8c0sCOTL8dmso.md"
+pubDatetime: 2026-03-15T08:47:46.242Z
+tags: ["洛谷搬运"]
+featured: false
+draft: false
+description: "t1752558414ptF8c0sCOTL8dmso.md - 迁移自洛谷博客"
+---
+
+# 每周总结
+posted on 2025-07-15 05:46:54 | under  | [source](https://www.luogu.com.cn/blog/_post/995704)
+
+- [$7.10 \sim 7.16$](#710-sim-716)
+  - [筛法](#筛法)
+    - [前置知识](#前置知识)
+      - [整除](#整除)
+    - [$\mu(n)$](#mun)
+    - [杜教筛](#杜教筛)
+    - [$\text{Powerful Number}$ 筛](#textpowerful-number-筛)
+  - [字符串相关](#字符串相关)
+    - [$\text{Hash}$](#texthash)
+    - [$\text{exKMP}$](#textexkmp)
+    - [$\text{Manacher}$](#textmanacher)
+    - [$\text{Suffix Array}$](#textsuffix-array)
+  - [闲话](#闲话)
+- [$7.17 \sim 7.23$](#717-sim-723)
+  - [模考](#模考)
+    - [7.17 模考题解](#717-模考题解)
+      - [T1](#t1)
+      - [T2](#t2)
+    - [$\text{01 trie}$ 与异或](#text01-trie-与异或)
+  - [计算几何](#计算几何)
+    - [凸包](#凸包)
+  - [组合优化，构造，计数例题选讲](#组合优化构造计数例题选讲)
+    - [P3515](#p3515)
+    - [P3524](#p3524)
+    - [CF1365G](#cf1365g)
+    - [AGC050A](#agc050a)
+    - [QOJ8130](#qoj8130)
+    - [AGC066A](#agc066a)
+    - [CODE FESTIVAL 2017 Final F](#code-festival-2017-final-f)
+    - [ARC170C](#arc170c)
+    - [神秘构造题目](#神秘构造题目)
+
+
+
+## 筛法
+
+### 前置知识
+
+数论函数：定义在正整数上的函数。
+
+例：$1(n)=1,\operatorname{id_k}(n)=n^k,2(n)=2$ 
+
+若 $\forall a,b, \gcd(a,b)=1\Rightarrow f(ab)=f(a)f(b)$ 则称 $f$ 积性。
+
+迪利克雷卷积： 两个数论函数 $f,g$ 的迪利克雷卷积为 $(f*g)(n)=\sum \limits_{i|n}f(i) g(\frac ni)$ 。满足交换律，结合律。若 $f,g$ 积性，则 $f*g$ 积性（若完全积性，则没有传递性）。
+
+$\epsilon (n)=[n=1]\\\epsilon *f=f\\1*1=\sigma_0=\sum \limits_{i|n} 1\\1*\operatorname{id}_k=: \sigma _k \\ \varphi*1=\operatorname{id}$
+
+迪利克雷逆：若 $f*g=\epsilon$，则 $g$ 是 $f$ 的迪利克雷逆，记 $g$ 为 $f^{-1}$ 。
+
+$[n=1]=\sum\limits_{i|n} f^{-1}(i)f(\frac ni)=f(1)f^{-1}(n)+\sum\limits_{i>1,i|n}f(i)f^{-1}(\frac ni)\\f^{-1}(n)=\dfrac{[n=1]-\sum \limits_{i>1,i|n} f(i)f^{-1}(\frac ni)}{f(1)}$
+
+于是 $f$ 有迪利克雷逆的充要条件是 $f(1)≠0$ 。
+
+#### 整除
+
+$[\frac{[\frac ni]}{j}]=[\frac n{ij}],\forall i\le n,[\frac{n}{[\frac ni]}]$ 是最大使 $[\frac{n}x]=[\frac ni]$ 的 $x$ 。
+
+记 $D_n=\{[\frac ni]|i=1,2,...,n\}, |D_n|=O(\sqrt n)$ 。因此会有整除分块这种优化方式。
+
+### $\mu(n)$
+
+莫比乌斯函数 $\mu$ 定义为 $1^{-1}$ 。
+
+若 $n$ 含有大于 $1$ 的平方因子， $\mu(n)=0$ 。否则，令 $k$ 为 $n$ 含有的不同质因子个数，$\mu(n)=(-1)^k$。
+
+由定义，
+
+$f(n)=\sum \limits_{i|n}g(i)\Leftrightarrow g(n)=\sum \limits_{i|n}\mu(\frac ni) f(i)\\f(n)=\sum \limits_{n|i}g(i)\Leftrightarrow g(n)=\sum \limits_{n|i}\mu(\frac in) f(i)$ 。（莫比乌斯反演公式）
+
+线性筛可以 $O(n)$ 求解积性函数。
+
+### 杜教筛
+
+在一些问题中，我们想对于一个特定的 $n$ 求一个积性函数的前缀和 $\sum \limits_{i=1}^n f(i)$ 。我们想将这个与整除分块相结合。例如，要快速的求 $\sum \limits_{i=1}^n \sum \limits_{j=1}^m [\gcd(i,j)=1]$，我们需要知道所有 $D_n \cup D_m$ 处 $\mu$ 的前缀和。
+
+考虑迪利克雷卷积，设 $h=f*g$，$h$ 的前缀和为
+
+$$\sum \limits_{i=1}^n h(i)=\sum \limits_{i=1}^n \sum \limits_{j|i} f(j)g(\frac ji)=\sum \limits_{i=1}^n\sum \limits_{j=1}^{[\frac ni]} f(i)g(j)\\=\sum \limits_{i=1}^nf(i)G([\frac ni])$$
+
+于是 $G(i)=\sum \limits_{i=1}^n h(i)-\sum \limits_{i=2}^n f(i)G([\frac ni])$ 。
+
+通过这个式子可以递归计算 $g$ 的前缀和（在 $n$ 的整除点处），要求能快速计算 $f,h$ 的前缀和。
+
+进行优化后（线性筛计算前 $n^{\frac 23}$ 个函数值，然后杜教筛剩下的）可以做到 $O(n^{\frac 23})$ 。
+
+### $\text{Powerful Number}$ 筛
+
+杜教筛求解 $f$ 的前缀和需要 $\exist g,h, f*g^{-1}=h$ 且 $g,h$ 前缀和易求，对积性函数要求较高，部分函数可能难以使用杜教筛，这时候可以使用PN筛。
+
+设 $n=p_1^{k_1} p_2^{k_2}\cdots p_m^{k_m}$，则 $n$ 是一个 $\text{powerful number}$ 当且仅当 $\forall i,k_i\ge 2$。所有 $\text{powerful number}$ 都可以表示成 $a^2 b^3$ 的形式。
+
+$n$ 以内的 $\text{powerful number}$ 个数是 $O(\sqrt n)$ 的。
+
+假设我们想要求解 $f$ 的前缀和，但 $f$ 不满足杜教筛的条件，此时我们想要找满足杜教筛条件的 $g$，并且对于任意质数 $p$ 满足 $f(p)=g(p)$，则我们有 $h=f*g^{-1}$，$h(1)g(p)+h(p)g(1)=g(p)+h(p)=f(p)+h(p)=f(p)$，$h(p)=0$，所以仅当 $n$ 是 $\text{powerful number}$ 时 $h(n)$ 才有可能非 $0$。
+
+$f=h*g,f$ 的前缀和可以表示为：
+
+$\sum \limits_{i=1}^n f(i)=\sum \limits_{i=1}^n \sum \limits_{j=1}^{[\frac{n}{i}]} h(i)g(j)=\sum \limits_{i=1}^nh(i) \sum \limits_{j=1}^{[\frac ni]}g(j)$，可以杜教筛 $g$，在每个 $\text{powerful number}$ 处求解 $h$，即可优化复杂度。考虑计算 $h(p^c)$，一种方式是 $f=g*h\Rightarrow h(p^c)=f(p^c)-\sum \limits_{i=1}^c g(p^i)h(p^{c-i})$，然后进行枚举（根据 $O(\sqrt n)$ 内素数个数为 $O(\frac{n}{\ln n})$，每个素数的指数至多为 $\ln n$，于是这一部分时间复杂度为 $O(\sqrt n\ln n)$）最后搜索 $n$ 以内的 $\text{powerful number}$ 即可。
+
+例：[LOJ #6053. 简单的函数](https://loj.ac/p/6053)
+
+积性函数 $f(n)$ 满足 $f(p^c)=p \operatorname{xor} c$，求 $f$ 的前缀和。$n \le 10^{10}$。
+
+$f(p)=\begin{cases}p+1& (p=2)\\p-1 &\text{otherwise} \end{cases}$，故可以构造 $g(n)=\begin{cases}3\varphi(n) & 2|n \\\varphi(n) &\text{otherwise} \end{cases}$ 
+
+$g$ 为积性函数。
+
+$$\begin{align} G(n)&=\sum \limits_{i=1}^n [i\bmod 2=1]\varphi(i) +3\sum \limits_{i=1}^n [i\bmod2=0]\varphi(i) \\ &=\sum \limits_{i=1}^n \varphi(i) +2\sum \limits_{i=1}^\frac n2 \varphi(2i) \end{align}$$
+
+记 $S_1(n)=\sum\limits_{i=1}^n \varphi(i),S_2(n)=\sum \limits_{i=1}^n \varphi(2i)$，$G(n)=S_1(n)+2S_2(\frac n2)$。
+
+当 $2|n$ 时，
+
+$$\begin{align}S_2(n)&= \sum \limits_{i=1}^n \varphi(2i)\\&= \sum \limits_{i=1}^\frac n2 (\varphi(2(2i-1)))+\varphi(2(2i)) \\ &=\sum \limits_{i=1}^{\frac n2} \varphi(2i-1)+2\varphi(2i)   \ \ ^{[1]} \\  &=S_1(n)+S_2(\frac n2)\end{align}$$
+
+否则， $\varphi(2n)=\varphi (n)$，$S_2(n)=S_1(n-1)+S_2(\frac n2)+\varphi(n)=S_1(n)+S_2([\frac n2])$。
+
+$S_1$ 可以杜教筛。于是我们可以快速求 $g$ 的前缀和。
+
+然后用 $h(p^c)=f(p^c)-\sum \limits_{i=1}^c g(p^i)h(p^{c-i})$ 可以计算 $h$ 的前缀和。
+
+$\sum \limits_{i=1}^n f(i)=\sum \limits_{i=1}^n \sum \limits_{j=1}^{[\frac{n}{i}]} h(i)g(j)=\sum \limits_{i=1}^nh(i) \sum \limits_{j=1}^{[\frac ni]}g(j)$
+
+$[1]:$ 根据 $\varphi(n)= n\prod\limits_{i=1}^k \frac{p_k-1}{p_k}$ ( $p_k$ 为 $n$ 的不同质因数) 推导可得。
+
+[代码](https://loj.ac/s/2367328)
+
+## 字符串相关
+
+以下记 $s$ 下标从 $1$ 开始。
+
+### $\text{Hash}$ 
+
+对于字符串 $s$，考虑哈希函数 $h(x)=\bigg (\sum \limits_{i=1}^{|s|} s[i] \times r^{|s|-i} \bigg)\mod{M}$
+
+（有点类似将 $s$ 看作一个 $r$ 进制数？）
+
+子串哈希值：子串 $s[l:r)$ 的哈希值是 $h(r)-h(l)\times r^{r-l}$。
+
+同时亦可对树进行hash。
+
+### $\text{exKMP}$
+
+核心思想： 从已知信息扩展。
+
+Border：定义为 $s$ 的公共前后缀。例: $\text{aabcaa}$ 的 border 是 $\text{a,aa}$。
+
+Z函数： $z(i)= \mathrm{LCP}(s,s[i:n])$。想要求解 $z(i)$ 。
+
+对于所有的 $1< j \le i$， 找到 $\max \{j+z[j]-1\}$，设 $k$ 是这个最大值的下标 $j$。目前匹配到的最大下标 $p$ 就是 $k+z[k]-1$。 这里没有包含 $1$ 是因为 $z(1)= n$。
+根据上述，我们可以得到 $s[1:z(k)]=s[k:p]$。
+
+进行推导，若 $z(i-k)<k+z(k)-i-1$，有 $z(i)=z(i-k)$，否则，从 $i-k$ 进行枚举。
+
+```cpp 
+void Z(char *s,int n){
+    z[1]=n;
+    for(int i=2,l=0,r=0;i<=n;i++){
+        //r是目前往右扩展到的位置 l是(j+z[j])最大的j
+        if(i<=r)z[i]=min(z[i-l+1],r-i+1);
+        while(i+z[i]<= n and s[i+z[i]]==s[z[i]+1])z[i]++;
+        if(i+z[i]-1>r)l=i,r=i+z[i]-1;
+    }
+}
+```
+
+### $\text{Manacher}$
+
+没太能理解，考场时忘了还是 $\text{Hash}$ + 二分凑活一下吧。
+
+若 $s[l:r]$ 是一个回文串，$s[j:k](l\le j\le k \le r)$ 也是回文串，则 $s[r-k+l: r-j+l]$ 也是一个回文串。
+
+留个flag，之后深度理解了再补。
+
+### $\text{Suffix Array}$
+
+寒假时学的，当时字符串就 SA 和后缀树比较明白。感觉SA用处算比较多的。今天复习一下。
+
+我们想对 $s$ 的所有后缀进行排序。求出数组 $\text{sa}[i]$，表示字典序 $s[\text{sa}[1]:]\le s[\text{sa}[2]:]\le \cdots \le s[\text{sa}[|s|]]$。
+
+对于后缀数组 $sa$，我们还想求一个辅助数组 $\text{rank}$，满足 $\text{rank[sa[}i\text{]]}=i$，即后缀 $\text{s}[i:]$ 的排名。
+
+首先的一种想法就是，我们可以通过字符串哈希+二分求出两个字符串的LCP，比较后一位的大小来比较两个后缀的字典序（这样做是 $O(\log n)$ 的）。将普通排序里比大小换成这样的比较大小，即可做到 $O(n \log^2 n)$。
+
+使用倍增可以将复杂度优化到 $O(n \log n)$。也有更加复杂的 $O(n)$ 做法。
+
+（咕咕咕）
+
+SA的应用：最小表示法（现在模板题被卡了，过不去），子串匹配（求出来 $h$ 数组），在很多地方可以替代KMP，AC自动机等。
+
+SAM/后缀树也很好用。
+
+## 闲话
+
+感觉这一周还是蛮舒服的，虽然很多题没写，AtCoder掉分了，模考炸了一次，但总体……呃，还好？
+
+学数论学的比较爽，字符串有点难受，没太听懂。（好像很久以来就没完全懂过？）
+
+吸取一下经验吧，之后别再犯了。去年NOIP挂掉也一部分是因为这个原因。
+
+模考的经验：
+
+> **题目难度不一定单调递增**。
+> **不要在一道没把握的题上磕超过1.5/2h**
+
+之后还是不要死磕了。
+
+# $7.17 \sim 7.23$
+
+## 模考
+
+### 7.17 模考题解
+
+#### [T1](https://www.luogu.com.cn/problem/P5336)
+
+考虑区间 $\text{DP}$，设 $f_{l,r}$ 代表消除掉 $[l,r]$ 所有元素产生的最小代价，则答案为 $f_{1,n}$。
+
+由于 $n\le 50$，我们可与先离散化。记 $g_{l,r,x,y}$ 表示将 $[l,r]$ 之间的元素改到只剩下 $x\sim y$ 的最小代价。这时有 $f_{l,r}= g_{l,r,x,y}+a+b\times (w_y-w_x)^2$ （$w_x$ 表示 $x$ 离散化之前的值）。
+
+考虑求解 $g_{l,r,x,y}$。我们枚举最后一个元素 $a_r$ 的情况。若它可以被保留，则有 $g_{l,r,x,y}=g_{l,r-1,x,y}$。否则，我们一定要消除 $a_r$，假设留下元素的最大下标为 $k$，那么 $[k+1,r]$ 这一段要消除，此时枚举 $k$ 更新 $g_{l,r,x,y}=g_{l,k,x,y}+f_{k+1,r}$。时间复杂度 $O(n^5)$。
+
+#### T2
+
+题意：求 $\sum \limits_{i=0}^m \binom{m}{i}\binom{n-m+2i}{k},T\le 100,n,m\le 10^9,k\le 10^3$。
+
+（$k$ 件事，共 $n$ 个人，$m$ 个人可以当志愿者，最多能做两件事。
+
+更换一个枚举方式，于是有 
+
+$$\begin{align} &=\sum \limits_{i=0}^k \sum \limits_{j=0}^{k-i}\binom{n-m}{k-i-2j}\binom{m}{i}\binom{m-i}{j}2^{i}2^{m-i-j}\\ &=\sum \limits_{i=0}^k \sum \limits_{j=0}^{k-i}\binom{n-m}{k-i-2j}\frac{m!}{i!j!(m-i-j)!}2^i2^{m-i-j}\\&=\sum \limits_{i=0}^k \sum \limits_{j=0}^{k-i}\frac{2^i2^{m-i-j}}{(k-i-2j)!i!j!} \prod\limits_{x=0}^{k-i-2j-1}(n-m-x)\prod\limits_{y=0}^{i+j-1} (m-y)\end{align}$$
+
+预处理后面两项，然后做完了……？
+
+### $\text{01 trie}$ 与异或
+
+7/21 模拟赛收获。
+
+给定一个集合 $A=\{a_1,a_2,...,a_n\}$ 与一个数 $x$，求 $\max\limits_{1\le i\le n} x \operatorname{xor} a_i$。
+
+我们可以对 A 建一个 Trie 树（按照二进制位），然后对 $x$ 贪心地在树上跑。（优先选 $x$ 没有的二进制位）。
+
+01 Trie 还可以维护异或和（支持插入，删除，全局+1）。具体地，对于每个节点维护三个值：`ch[u][0/1]`，代表 $u$ 的两个儿子，下一位是 `0/1`；`w[u]` 是 $u$ 到父节点边上数值的数量（每次插入时走过会+1）；`xorv[u]` 是以 $u$ 为根的子树异或和。每次插入进行维护即可。
+
+同时 01 Trie 还可以支持合并，过程类似左偏树/线段树合并。
+
+
+
+## 计算几何
+
+### 凸包
+
+
+
+## 组合优化，构造，计数例题选讲
+
+### P3515
+
+给定一个序列 $a$，要求对每个 $i$ 求 $\max \mathrm{ceil}(\sqrt{|i-j|}+a_j)$，$n\le 5\times 10^5$。
+
+考虑将 $j$ 分为两部分：小于 $i$ 与大于 $i$。先考虑第一部分，注意到具有决策单调性，即若对于 $x<y$，在 $x$ 时的转移位置 $j$ 不会大于 $y$ 时的转移位置（ $i$ 增加时，$j$ 更小的点会变劣，$j$ 更大的点会变得更优）。因此可以分治解决，对于一个区间 $[l,r]$，取它的 $mid$，这个决策点的位置一定在 $l$ 的决策点和 $r$ 的决策点之间，遍历求解即可。分治层数为 $O(\log n)$，故复杂度 $O(n \log n)$。
+
+### P3524
+
+给定一张 $n$ 个点 $m$ 条边的图，保证有 $\frac{2n}{3}$ 个点的团，需要找到一个 $\frac{n}{3}$ 个点的团。 $n\le 3000$。
+
+考虑每次删两个不连通的点，因为这两个点至多有一个在团里，因此删完所有不连通的点后至少会有一个 $\frac{n}{3}$ 的团。
+
+### CF1365G
+
+有数组 $A$，$P_i= \operatorname{OR}\limits_{j \neq i} A_j$，你每次可以给出一个集合并询问集合内下标元素的或，要使用至多 $13$ 次询问求出 $P$。$n\le 10^3,A_i\le 2^{63}$。
+
+考虑将所有数按照 $13$ 位编码，并强制每个编码都有 $6$ 个 $1$。（因为 $\binom{13}{6}\ge 1000$，所以这是可以做到的）每次询问第 $1,2,...,13$ 位是 $1$ 的所有数的集合，并将其他位是 $0$ 的或上这个答案。因为任意两个集合之间没有包含关系，可以保证每个数都被其他数或过至少一次，所以即可获得答案。
+
+### AGC050A
+
+你有 $n$ 个点，对于每个点你可以向外面连两条单向边，构造一个方案使得任意两点间存在一条路径经过不超过 $10$ 条边。$n\le 1000$。
+
+对于每个点 $i$ 连边 $2i \bmod n$ 与 $(2i+1) \bmod n$（ $0$ 开始编号）。走十条边后可以抵达 $1024i\sim 1024i+1023 \pmod n$，故一定有解。
+
+### QOJ8130
+
+给定两颗有根树，保证这两棵树有且仅有 $1,2,...,k$ 号点是叶子。将每个叶子染成红色或者蓝色，使得对于每棵树，每个子树中红叶子和蓝叶子的数量相差不超过 $1$。 $n\le 10^5$。
+
+对每棵树从下到上递归，对于每棵树，要是存在两个没有连过边的叶子连边，要求这两个叶子颜色不同。可以验证最后一定是若干偶环和链，故一定有解。
+
+### AGC066A
+
+给定矩阵 $A$ 与正整数 $d$，求一个矩阵 $B$ 满足 $\forall i\in [1,n-1],j\in [1,n],|B_{i,j}-B_{i+1,j}\ge d,|B_{j,i}-B_{j,i+1}|\ge d$。要求 $\sum |A_{i,j}-B_{i,j}|\le \frac{dn^2}{2},n\le 1000$。
+
+考虑 $d=1$ 时，给网格黑白染色，黑色填奇数，白色填偶数，这样做最大代价是 $dn^2$。考虑反过来填这两种方案的和是 $dn^2$，因此一定有一种方案满足条件。$d$ 更大时，黑色填 $\bmod 2d=d$，白色 $\bmod 2d=0$ （或反过来）即可。
+
+### CODE FESTIVAL 2017 Final F
+
+你要选择一个正整数 $n(10^3 \le n\le 2\times 10^3)$ 和 $k$，使得存在 $\{1,2,...,n\}$ 的子集 $S_1,S_2,...,S_n$ 满足：
+
+- $|S_i|=k$，
+- $\forall i\in [1,n]$， $i$ 在所有集合中出现过 $k$ 次。
+- $\forall 1\le i< j\le n, |S_i \cap S_j|=1$。
+
+并求出一种方案。（提交答案题）
+
+观察 $\sum \limits_{i=1}^n \sum \limits_{j=i+1}^n |S_i \cap S_j|$，因为每个值都会恰好出现 $k$ 次，每个值会恰好贡献 $\binom{k}{2}$ 个二元组。因此有 $\frac{n(n-1)}{2}=\frac{nk(k-1)}{2}$，化简得 $n=k^2-k+1$。
+
+当 $(k-1)$ 为质数时会有一个合法的方案。将元素写为下面的形式（$n=13,k=4$）：$$\begin{matrix} 1 & 2 & 3 & 4\\-& 5 & 6 & 7 \\ - & 8 & 9 & 10 \\ - & 11 & 12 & 13\end{matrix}$$ 对于 $1$ 能先取每一行，对于第一行的其他元素，构造一个“步长”相等的序列（例： 2 5 8 1,2 6 9 12,2 7 10 13, 3 5 9 13,3 6 19 11,3 7 8 12,4 5 10 12,4 6 8 13,4 7 9 11），即构造完了这组解。
+
+### ARC170C
+
+给定 $n,m$ 和字符串 $s$，问有多少长度为 $n$ 且值域为 $[0,m]$ 的序列 $a$ 满足第 $i$ 个位置为 $1$ 当且仅当 $a_i=\mathrm{mex}(a_1,a_2,...,a_{i-1})$。
+
+### Ex
+
+构造 $10^4$ 个 $a_i$，使得 $a_i+a_j$ 互不相同且 $a_i\le 5\times 10^8$。
+
+选取一个比 $n$ 略大的质数 $p$，构造 $a_i= 2ip+(i^2\bmod p)$。
+
+$a_i+a_j= 2(i+j)p +(i^2\bmod p)+(j^2 \bmod p) $ 总是唯一的。
+

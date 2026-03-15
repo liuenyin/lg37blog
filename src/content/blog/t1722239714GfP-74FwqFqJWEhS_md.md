@@ -1,0 +1,142 @@
+---
+title: "t1722239714GfP-74FwqFqJWEhS.md"
+pubDatetime: 2026-03-15T08:47:46.262Z
+tags: ["洛谷搬运"]
+featured: false
+draft: false
+description: "t1722239714GfP-74FwqFqJWEhS.md - 迁移自洛谷博客"
+---
+
+# P10528 [XJTUPC2024] 崩坏：星穹铁道 题解
+posted on 2024-07-29 07:55:14 | under  | [source](https://www.luogu.com.cn/blog/_post/791071)
+
+## 题目大意
+
+给定 $4$ 名角色，有三种不同的行动类型，$n$ 次行动，求有多少种行动方案。
+
+## 思路
+
+先考虑最基本的动态规划，$f_{i,j}$ 代表第 $i$ 次行动，剩余 $j$ 个战技点的不同方案数。
+
+如果 $a=1$，即当前角色为类型 $1$，若当前战技点满了（$j=5$）不会增加一个战技点，否则会增加，即：
+
+$$f_{i,j} = \begin{cases} f_{i-1,j-1} & j>0 \\f_{i-1,5} & j=5\end{cases} $$
+
+同理，可得 $a=2$ 和 $a=3$ 时的转移方程：
+
+$$f_{i,j} = \begin{cases} f_{i-1,j+1} & j<5 \\f_{i-1,0} & j=1\end{cases} $$
+
+$$f_{i,j} = \begin{cases} f_{i-1,j-1} & j>0 \\f_{i-1,5} & j=5 \\ f_{i-1,j+1}& j<5 \end{cases} $$
+
+发现 $i$ 这一维在转移时只取到了 $i-1$，因此可以使用滚动数组优化，但是 DP 的时间复杂度是 $O(n)$ 的，无法通过 $n\leq 10^{18}$。对于这一部分，需要使用 $O(\log n)$ 的算法，因此想到使用矩阵加速递推。
+
+根据转移方程，可以得到转移矩阵：
+
+若 $a=1$，则转移矩阵为：
+$$ \begin{bmatrix} 
+0 & 1 & 0 & 0 & 0 & 0\\ 
+0 & 0 & 1 & 0 & 0 & 0\\ 
+0 & 0 & 0 & 1 & 0 & 0\\ 
+0 & 0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 0 & 1\\
+0 & 0 & 0 & 0 & 0 & 1\\ 
+\end{bmatrix}$$ 
+
+若 $a=2$，则转移矩阵为：
+$$ \begin{bmatrix} 
+0 & 1 & 0 & 0 & 0 & 0\\ 
+1 & 0 & 0 & 0 & 0 & 0\\ 
+0 & 1 & 0 & 0 & 0 & 0\\ 
+0 & 0 & 1 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0\\ 
+\end{bmatrix}$$ 
+
+若 $a=3$，则转移矩阵为：
+$$ \begin{bmatrix} 
+0 & 1 & 0 & 0 & 0 & 0\\ 
+1 & 0 & 1 & 0 & 0 & 0\\ 
+0 & 1 & 0 & 1 & 0 & 0\\ 
+0 & 0 & 1 & 0 & 1 & 0\\
+0 & 0 & 0 & 1 & 0 & 1\\
+0 & 0 & 0 & 0 & 1 & 1\\ 
+\end{bmatrix}$$ 
+
+由于战斗过程是四个人轮流发动攻击，并且每个人所对应的矩阵可能不同，因此可以将四次行动绑在一起作为一回合，建立一个新的矩阵作为回合的转移矩阵，对这个新矩阵进行快速幂，后面再将不满一回合的操作另外统计进去就可以了（另外，还需要构造一个初始矩阵，进行一次乘法初始矩阵除 $(0,k)$ 为 $1$ 外其余全为 $0$）。最后枚举剩余的战技点，累加答案即可。
+
+## 代码实现
+
+（出于习惯代码里矩阵的下标是从 $1$ 开始的，因此对应下标要 $+1$）
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int N=10+5,M=998'244'353;
+struct matrix{
+    int sizeh,sizel;
+    ll val[N][N];
+    matrix(){
+        sizeh=0,sizel=0;
+        memset(val,0,sizeof val);
+    }
+    matrix(int X){//单位方阵
+        sizeh=sizel=X;
+        for(int i=1;i<=X;i++){
+            for(int j=1;j<=X;j++){
+                if(i==j)val[i][j]=1;
+                else val[i][j]=0;
+            }
+        }
+    }
+    matrix operator*(const matrix &A)const{
+        matrix ret;
+        ret.sizeh=this->sizeh;
+        ret.sizel=A.sizel;
+        for(int i=1;i<=this->sizeh;i++){
+            for(int j=1;j<=A.sizel;j++){
+                for(int k=1;k<=this->sizel;k++){
+                    ret.val[i][j]+=(this->val[i][k]*A.val[k][j])%M;
+                    ret.val[i][j]%=M;
+                }
+            }
+        }
+        return ret;
+    }
+};
+matrix qpow(matrix A,ll k){
+    matrix ret(A.sizeh);
+    while(k){
+        if(k&1)ret=ret*A;
+        A=A*A;
+        k>>=1;
+    }
+    return ret;
+}
+ll n,k;
+int a[N]; 
+matrix t[N];//三种类型的转移矩阵
+ll cnt;
+int main(){
+    cin>>n>>k;
+    //这里实现下标是从1开始的
+    t[1].sizeh=t[1].sizel=t[2].sizeh=t[2].sizel=t[3].sizeh=t[3].sizel=6;
+    t[1].val[1][2]=t[1].val[2][3]=t[1].val[3][4]=t[1].val[4][5]=t[1].val[5][6]=t[1].val[6][6]=1;
+    t[2].val[1][2]=t[2].val[2][1]=t[2].val[3][2]=t[2].val[4][3]=t[2].val[5][4]=t[2].val[6][5]=1;
+    t[3].val[1][2]=t[3].val[2][3]=t[3].val[3][4]=t[3].val[4][5]=t[3].val[5][6]=t[3].val[6][6]=1;
+    t[3].val[2][1]=t[3].val[3][2]=t[3].val[4][3]=t[3].val[5][4]=t[3].val[6][5]=1;
+    matrix ans(6),start;
+    start.val[1][k+1]=1;//初始矩阵
+    start.sizeh=start.sizel=6;
+    for(int i=1;i<=4;i++){
+        cin>>a[i];
+        ans=ans*t[a[i]];
+    }    
+    ans=start*qpow(ans,n/4);
+    n%=4;
+    for(int i=1;i<=n;i++)ans=ans*t[a[i]];
+    for(int i=1;i<=6;i++)cnt=(cnt+ans.val[1][i])%M;
+    cout<<cnt;
+    return 0;
+}
+```
+

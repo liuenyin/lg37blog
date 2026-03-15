@@ -1,0 +1,111 @@
+---
+title: "t17205268067OKSfAKZ6OliDAs9.md"
+pubDatetime: 2026-03-15T08:47:46.304Z
+tags: ["洛谷搬运"]
+featured: false
+draft: false
+description: "t17205268067OKSfAKZ6OliDAs9.md - 迁移自洛谷博客"
+---
+
+# XJOI 9789 数位删减题解
+posted on 2024-07-09 12:06:46 | under  | [source](https://www.luogu.com.cn/blog/_post/774863)
+
+2024/7/9
+
+### 题意
+
+给出一个数 $x$ ，删去其中的 $k$ 位，求删完之后最小的正整数。 $x\leq 10^{5\times 10^5}$
+
+### 思路
+
+对于两个数，在位数相同的情况下及前 $i$ 位相同的情况下，第 $i+1$ 位决定这两个数的大小关系，即删数要优先选择高位。
+
+那么，对于一个数字（看成数字序列）$x$， 比较 $x_i$ 和 $x_{i+1}$ ，直到该数列单调不降。这个时候，删除最后一个数字（即最大的数）。
+
+朴素做法 $O(|x|k)$ ，考虑优化。
+
+可以看到，我们想维护一个单调的序列，因此想到使用单调栈。
+
+栈中的元素表示到当前位置删完数字后，能得到（前面部分）最小的整数。可以发现，栈中的序列从底到顶单调不增。
+
+但是考虑到此题对于 $0$ 的特殊要求，这种做法十分复杂，于是放弃这种做法。（事实上，调了很久没调出来）
+
+上面的思路中，我们一直在直接删数字，正难则反，我们是否可以从每一位数字的角度删数字，记录消耗？
+
+创建一个数组 $c$ ，对于 $0$ 到 $9$ 中每一位数字记录其在 $x$ 中出现的位置，$c_{i,j}$ 表示数字 $i$ 第 $j$ 次出现的位置，同时创建指向在当前位置之后第一个 $i$ 的指针。
+
+遍历 $x$ 的每一位数，对于每一位 $x_i$ ，求 $x_i$ 在消耗小于 $k$ 的情况下最小能变成的数字，并将 $x_i$ 一直到这个数字中间的所有数字都删掉。
+
+代码实现还要注意一个数在前面被删掉的情况下不能变为 $0$ 。
+
+### 核心代码
+
+```cpp
+int t,a[N],k,n,cpt[15];//cpt是指针，cpt_i指向x_i后面第一个为i的数字
+int used[N],K;
+char ch;
+int qianmiandoushiused[N];
+vector<int> c[15];
+int main(){
+    cin>>t;
+    while(t--){
+        for(int i=0;i<=10;i++)c[i].clear();
+        memset(cpt,0,sizeof cpt);
+        getchar();
+        //奇妙输入
+        for(n=0;;n++){
+            ch=getchar();
+            if(ch=='\n')break;
+            if(ch=='\r'||ch==' ')break;
+            a[n+1]=ch-'0';
+        }
+        cin>>k;
+        K=k;
+        for(int j=1;j<=n;j++){
+            c[a[j]].push_back(j);
+        }
+        qianmiandoushiused[1]=1;
+        for(int i=1;i<=n;i++){
+            if(used[i]){
+                //cout<<"used"<<i<<endl;
+                continue;
+            }
+            for(int j=0;j<=9;j++){
+                if(qianmiandoushiused[i] and j==0)continue;
+                while(cpt[j]<c[j].size() and c[j][cpt[j]]<i)cpt[j]++;
+                if(cpt[j]>=c[j].size())continue;
+                if(k>=(c[j][cpt[j]]-i)){
+                    //cout<<i<<" "<<j<<" "<<k<<" "<<c[j][cpt[j]]<<endl;
+                    k-=c[j][cpt[j]];
+                    k+=i;
+                    for(int l=i;l<c[j][cpt[j]];l++){
+                        qianmiandoushiused[l+1]|=qianmiandoushiused[l];
+                        used[l]=1;
+                    }
+                    break;
+                }
+            }
+        }
+        deque<int> dq,dq2;
+        for(int i=1;i<=n;i++){
+            if(!used[i]){
+                dq.push_back(a[i]);
+                dq2.push_back(i);
+            }
+            used[i]=0;
+            qianmiandoushiused[i]=0;
+        }
+        for(int i=1;i<=n-K;i++){
+            cout<<dq.front();
+            dq.pop_front();
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+```
+
+### 反思
+
+写这道题的时候，由于前面的错误思路耽误了很长时间没调出来，以后写题的时候要从多个角度想一下，并且想好之后再写代码。
+
