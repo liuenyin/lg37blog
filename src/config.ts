@@ -1,23 +1,23 @@
 export const SITE = {
-  website: "https://blog.lg37.com/", // replace this with your deployed domain
+  website: "https://blog.lg37.com/",
   author: "liuenyin",
   profile: "https://github.com/liuenyin",
   desc: "liuenyin的个人博客 - 算法·竞赛·随笔",
   title: "liuenyin's blog",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "og-image.png",
   lightAndDarkMode: true,
   postPerIndex: 6,
-  postPerPage: 4,
-  scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
+  postPerPage: 8,
+  scheduledPostMargin: 15 * 60 * 1000,
   showArchives: true,
-  showBackButton: true, // show back button in post detail
+  showBackButton: true,
   editPost: {
     enabled: true,
     text: "Edit page",
-    url: "https://github.com/satnaing/astro-paper/edit/main/",
+    url: "https://github.com/liuenyin/lg37blog/edit/master/",
   },
   dynamicOgImage: true,
-  dir: "ltr", // "rtl" | "auto"
-  lang: "en", // html lang code. Set this empty and default will be "en"
-  timezone: "Asia/Bangkok", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  dir: "ltr",
+  lang: "zh-CN",
+  timezone: "Asia/Shanghai",
 } as const;

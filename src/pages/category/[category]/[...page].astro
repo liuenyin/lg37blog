@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPathsOptions } from "astro";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { SITE } from "@/config";
+
+const CATEGORIES = ["游记", "题解", "文化课", "闲话", "笔记"] as const;
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const posts = await getCollection("blog");
+  const sorted = getSortedPosts(posts);
+
+  return CATEGORIES.flatMap(cat => {
+    const catPosts = sorted.filter(p => p.data.category === cat);
+    return paginate(catPosts, {
+      params: { category: cat },
+      pageSize: SITE.postPerPage,
+    });
+  });
+}
+
+const { category } = Astro.params;
+const { page } = Astro.props;
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  "游记": "🗺️",
+  "题解": "📝",
+  "文化课": "📚",
+  "闲话": "💬",
+  "笔记": "📓",
+};
+---
+
+<Layout title={`${category} | ${SITE.title}`}>
+  <Header />
+  <Main
+    pageTitle={`${CATEGORY_EMOJI[category!] || ""} ${category}`}
+    pageDesc={`所有「${category}」分类的文章`}
+  >
+    {page.data.length > 0 ? (
+      <ul>
+        {page.data.map(data => <Card {...data} />)}
+      </ul>
+    ) : (
+      <p class="mt-8 text-foreground/60">这个分类下暂时没有文章～</p>
+    )}
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>

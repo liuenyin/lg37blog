@@ -65,7 +65,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           const count = sortedPosts.filter(p => p.data.category === cat).length;
           return (
             <a
-              href={`/tags/${cat}/`}
+              href={`/category/${cat}/`}
               class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
               style="background-color: rgba(59,130,246,0.12); color: #2563eb;"
             >
