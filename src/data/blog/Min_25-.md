@@ -1,7 +1,8 @@
 ---
 title: "Min_25 筛 学习笔记"
+category: "笔记"
 pubDatetime: 2025-09-07T01:26:23.000Z
-tags: ["数论","组合数学","题解","洛谷"]
+tags: ["数论","组合数学","题解","洛谷","笔记"]
 featured: false
 draft: false
 description: "Min25筛可以在 O(frac{n^{frac{3}{4}}}{log n}) 的复杂度内求一个积性函数 f(p) 的前缀和，要求 f(p) 为关于 p 的简单多项式，且 f(p^c) 可以快速计算。"

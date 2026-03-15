@@ -1,7 +1,8 @@
 ---
 title: "CSP-J/S 2023 游寄"
+category: "游记"
 pubDatetime: 2023-10-27T18:11:52.000Z
-tags: ["信息学竞赛","洛谷","Codeforces"]
+tags: ["信息学竞赛","洛谷","Codeforces","游记"]
 featured: false
 draft: false
 description: "做了一个暑假的题，硬生生的从 50pts 拉到了 80pts"

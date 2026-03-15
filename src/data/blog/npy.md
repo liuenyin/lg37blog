@@ -1,7 +1,8 @@
 ---
 title: "我的npy莫反！"
+category: "闲话"
 pubDatetime: 2025-10-19T11:43:38.000Z
-tags: ["数论","数据结构","洛谷"]
+tags: ["数论","数据结构","洛谷","闲话"]
 featured: false
 draft: false
 description: "求 sum limits_{i=1}^{n } sum limits_{j=1}^{m} [sigma_1(gcd(i,j)) le a] sigma_1(gcd(i,j)),n,mle 10^5,qle 2times 10^4"

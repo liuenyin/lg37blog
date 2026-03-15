@@ -1,7 +1,8 @@
 ---
 title: "THUPC 2026（初赛） 游记"
+category: "游记"
 pubDatetime: 2025-12-14T00:55:48.000Z
-tags: ["贪心","随笔","洛谷","Codeforces"]
+tags: ["贪心","随笔","洛谷","Codeforces","游记"]
 featured: false
 draft: false
 description: "自从四五月份知道这个比赛，想和朋友来玩好久了。找到了两个ZJ的初二佬当队友。商量好了我倒序开题。"

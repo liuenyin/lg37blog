@@ -1,5 +1,6 @@
 ---
 title: "ABC025D 题解"
+category: "题解"
 pubDatetime: 2023-09-09T18:33:41.000Z
 tags: ["动态规划","搜索","题解","洛谷"]
 featured: false

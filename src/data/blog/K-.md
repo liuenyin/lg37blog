@@ -1,7 +1,8 @@
 ---
 title: "K短路 学习笔记"
+category: "笔记"
 pubDatetime: 2025-03-08T06:54:46.000Z
-tags: ["图论","搜索","数据结构","题解"]
+tags: ["图论","搜索","数据结构","题解","笔记"]
 featured: false
 draft: false
 description: "[留档提交记录，供以后闲暇的时候慢慢调。](https://www.luogu.com.cn/record/206767996)"

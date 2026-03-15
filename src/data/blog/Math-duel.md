@@ -1,7 +1,8 @@
 ---
 title: "Math duel！"
+category: "游记"
 pubDatetime: 2026-03-04T04:45:04.000Z
-tags: ["算法","洛谷","Codeforces"]
+tags: ["算法","洛谷","Codeforces","游记"]
 featured: false
 draft: false
 description: "大家或许和朋友打过 CF Duel，那种竞技感确实很好玩。但奈何我所在学校打 OI 的人寥寥无几，高达 0 个人能跟我打 Duel。这东西又很好玩，于是我决定自己整一个文化课版本的。"

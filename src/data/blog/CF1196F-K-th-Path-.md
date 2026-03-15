@@ -1,5 +1,6 @@
 ---
 title: "CF1196F K-th Path 题解"
+category: "题解"
 pubDatetime: 2024-07-26T20:41:58.000Z
 tags: ["图论","题解","洛谷","Codeforces"]
 featured: false

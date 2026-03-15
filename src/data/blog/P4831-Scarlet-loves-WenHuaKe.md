@@ -1,5 +1,6 @@
 ---
 title: "题解：P4831 Scarlet loves WenHuaKe"
+category: "题解"
 pubDatetime: 2025-03-09T05:00:17.000Z
 tags: ["图论","题解","洛谷"]
 featured: false

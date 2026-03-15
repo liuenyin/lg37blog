@@ -1,7 +1,8 @@
 ---
 title: "NOIP时在做什么？有没有空？可以来拯救吗？"
+category: "游记"
 pubDatetime: 2025-11-14T08:23:35.000Z
-tags: ["图论","贪心","字符串","信息学竞赛"]
+tags: ["图论","贪心","字符串","信息学竞赛","游记"]
 featured: false
 draft: false
 description: ":::epigraph[Evernight]"
