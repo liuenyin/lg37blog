@@ -5,19 +5,15 @@ title: "About"
 
 ## 关于我
 
-嗨！我是 **liuenyin**，一名竞赛算法爱好者，目前在 XJTU 就读。
+你好你好！我是刘恩印，一名普通的高中生，你也可以叫我 lg37 或者 ln 哦~
 
-这个小窝记录了我的算法题解、学习笔记，以及偶尔的碎碎念。
+这个博客记录了我之前的OI生涯，以及偶尔的碎碎念。
 
-## 关于这个博客
-
-- 🏗️ 使用 [Astro](https://astro.build/) 构建，搭配极简主题
-- 📝 完整支持 Markdown 和 LaTeX 数学公式
-- 🌓 支持浅色/深色模式切换
-- 🚀 纯静态站点，加载速度极快
+呃啊啊啊好尴尬！！！不知道说啥！！那就，草草的收场吧，希望你我皆能在这里找到想要的~
 
 ## 联系我
 
-- 📧 Email: [18911670089@163.com](mailto:18911670089@163.com)
-- 🐱 GitHub: [liuenyin](https://github.com/liuenyin)
-- 🟢 洛谷: [liuenyin (UID 892979)](https://www.luogu.com.cn/user/892979)
+- QQ: 2532468581，最好注明来意
+- Email: [18911670089@163.com](mailto:18911670089@163.com)
+- GitHub: [liuenyin](https://github.com/liuenyin)
+- 洛谷: [liuenyin](https://www.luogu.com.cn/user/892979)
