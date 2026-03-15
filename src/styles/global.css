@@ -4,23 +4,23 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-/* ── Light mode: white / soft-green / sky-blue / blush-pink ── */
+/* ── Light mode: warm cream / sage-green / rose-pink / lavender ── */
 :root,
 html[data-theme="light"] {
-  --background: #fafbfc;
-  --foreground: #1e2129;
-  --accent:     #0e9f6e;
-  --muted:      #e8f5f1;
-  --border:     #d1e8e0;
+  --background: #fef9f4;        /* warm cream */
+  --foreground: #2d3436;        /* dark charcoal, softer than pure black */
+  --accent:     #00b894;        /* mint-green — fresh spring feel */
+  --muted:      #f0e6ef;        /* soft lavender-pink for tags/chips */
+  --border:     #e8d5d5;        /* warm rose-tinted border */
 }
 
-/* ── Dark mode: charcoal / slate / blue / orange / amber ── */
+/* ── Dark mode: deep navy / amber-gold / teal / soft blue ── */
 html[data-theme="dark"] {
-  --background: #111318;
-  --foreground: #e4e8f0;
-  --accent:     #f97316;
-  --muted:      #1e2435;
-  --border:     #2a3655;
+  --background: #0d1117;        /* GitHub-dark navy */
+  --foreground: #f0e6d3;        /* warm parchment text */
+  --accent:     #f0a500;        /* warm amber-gold */
+  --muted:      #1a2332;        /* deep navy-blue muted */
+  --border:     #2d3a4a;        /* steel-blue border */
 }
 
 @theme inline {

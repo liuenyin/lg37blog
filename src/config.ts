@@ -1,12 +1,12 @@
 export const SITE = {
   website: "https://blog.lg37.com/", // replace this with your deployed domain
-  author: "洛谷 UID 892979",
-  profile: "https://www.luogu.com.cn/user/892979",
-  desc: "基于 Astro 构建的极简技术博客，支持 Markdown 和 LaTeX。",
-  title: "Lg37 Blog",
+  author: "liuenyin",
+  profile: "https://github.com/liuenyin",
+  desc: "liuenyin的个人博客 - 算法·竞赛·随笔",
+  title: "liuenyin's blog",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
-  postPerIndex: 4,
+  postPerIndex: 6,
   postPerPage: 4,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
   showArchives: true,
