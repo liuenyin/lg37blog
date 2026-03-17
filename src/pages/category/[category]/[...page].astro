@@ -10,9 +10,8 @@ import Pagination from "@/components/Pagination.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
 
-const CATEGORIES = ["游记", "题解", "文化课", "闲话", "笔记"] as const;
-
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const CATEGORIES = ["游记", "题解", "文化课", "闲话", "笔记"] as const;
   const posts = await getCollection("blog");
   const sorted = getSortedPosts(posts);
 
