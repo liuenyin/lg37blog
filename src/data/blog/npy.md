@@ -14,15 +14,21 @@ description: "求 sum limits_{i=1}^{n } sum limits_{j=1}^{m} [sigma_1(gcd(i,j)) 
 
 求 $\sum \limits_{i=1}^{n } \sum \limits_{j=1}^{m} [\sigma_1(\gcd(i,j)) \le a] \sigma_1(\gcd(i,j)),n,m\le 10^5,q\le 2\times 10^4$
 
-$$\begin{align} &\sum \limits_{i=1}^{n } \sum \limits_{j=1}^{m} [\sigma_1(\gcd(i,j)) \le a] \sigma_1(\gcd(i,j))\\ &=\sum \limits_{d=1}^n \sum \limits_{i=1}^{\frac nd} \sum \limits_{j=1}^{\frac md}[\sigma_1(d)\le a][\gcd(i,j)=1] \sigma_1(d) 
+$$
+\begin{align} &\sum \limits_{i=1}^{n } \sum \limits_{j=1}^{m} [\sigma_1(\gcd(i,j)) \le a] \sigma_1(\gcd(i,j))\\ &=\sum \limits_{d=1}^n \sum \limits_{i=1}^{\frac nd} \sum \limits_{j=1}^{\frac md}[\sigma_1(d)\le a][\gcd(i,j)=1] \sigma_1(d) 
 \\&= \sum \limits_{d=1}^n \sigma_1(d)[\sigma_1(d)\le a]\sum \limits_{i=1}^\frac nd\sum\limits_{j=1}^\frac md [\gcd(i,j)=1] \\&=
 \sum \limits_{d=1}^n \sigma_1(d)[\sigma_1(d)\le a]\sum \limits_{i=1}^\frac nd\sum\limits_{j=1}^\frac md \sum \limits_{k|\gcd(i,j)}\mu(k)
 \\&= \sum \limits_{d=1}^n \sigma_1(d)[\sigma_1(d)\le a]\sum \limits_{k=1}^\frac nd\lfloor \frac{n}{dk}\rfloor \lfloor \frac{m}{dk} \rfloor \mu(k)
-\end{align}$$
+\end{align}
+
+$$
 
 设 $T=dk$
 
-$$\begin{align}&= \sum \limits_{T=1}^n \lfloor \frac{n}{T}\rfloor \lfloor \frac{m}{T} \rfloor \sum \limits_{k|T} \mu(k)  \sigma_1(\frac Tk) [\sigma_1(\frac Tk)\le a] \end{align}$$
+$$
+\begin{align}&= \sum \limits_{T=1}^n \lfloor \frac{n}{T}\rfloor \lfloor \frac{m}{T} \rfloor \sum \limits_{k|T} \mu(k)  \sigma_1(\frac Tk) [\sigma_1(\frac Tk)\le a] \end{align}
+
+$$
 
 后面那个式子可以看为一个关于 $(T,a)$ 的函数。考虑预处理 $\sigma_1(x)$ 并将函数值从小到大排序，将询问按照 $a$ 从小到大排序。每次前面的整除分块相当于求一个前缀和询问，我们需要用数据结构维护后面那个东西。树状数组可以。每次 $a$ 变大后，加入一个 $\sigma_1(k)$相当于在 $k,2k,3k,...$ 增加 $\mu(1)\sigma_1(k), \mu(2)\sigma_1(k)...$。最终插入次数调和级数。于是这部分复杂度 $O(n \log^2 n)$。整除分块复杂度 $O(T \sqrt n \log n)$。 
 

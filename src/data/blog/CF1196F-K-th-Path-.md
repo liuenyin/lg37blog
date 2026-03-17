@@ -12,7 +12,6 @@ description: "前 k 条最短路只能由长度前 k 短的边构成，而 kleq 
 
 时间复杂度 $O(k^3 + m \log m)$，可以通过本题。
 
-
 ```cpp
 #include<bits/stdc++.h>
 typedef long long ll;
