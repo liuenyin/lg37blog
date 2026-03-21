@@ -1,6 +1,6 @@
 ---
-title: "novel?"
-category: "一些想写成小说但是还没来得及写的东西"
+title: "一些想写成小说但是还没来得及写的东西"
+category: "闲话"
 pubDatetime: 2026-03-21T02:01:47.000Z
 tags: ["闲话","novel"]
 featured: false
