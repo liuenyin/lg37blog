@@ -167,6 +167,8 @@ const structuredData = {
   </head>
   <body>
     <slot />
+    <march-companion transition:persist="march-companion"></march-companion>
+    <script is:inline type="module" src="/companion/widget.js"></script>
 
     <!-- Load full theme logic -->
     <script src="../scripts/theme.ts"></script>
